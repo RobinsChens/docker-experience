@@ -1,0 +1,6 @@
+openresty:
+  image: "ficusio/openresty:debian"
+  ports:
+    - 80:80
+  volumes:
+    - ./work/conf/:/opt/openresty/nginx/conf/

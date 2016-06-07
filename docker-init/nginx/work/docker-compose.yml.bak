@@ -1,0 +1,227 @@
+openresty:
+  image: "ficusio/openresty:debian"
+  ports:
+    - 80:80
+  links:
+    - finance-consumer
+    - sms-consumer
+    - payment-config-consumer
+    - payment-consumer
+    - authority-manager-consumer
+    - common-config-consumer
+    - user-consumer
+    - coupon-product-consumer
+    - coupon-order-consumer
+    - coupon-report-consumer
+    - coupon-messaging-consumer
+  volumes:
+    - ./work/conf/:/opt/openresty/nginx/conf/
+
+sms-consumer:
+  image: java:8
+  working_dir: /app
+  volumes:
+    - ./sms-consumer:/app
+
+  command: java -jar /app/vp-sms-consumer-1.0.0.jar -XX:PermSize=30m -Xmx68m --spring.profiles.active=test
+
+  ports:
+    - 9430:9430
+    - 21180:21180
+    - 22013:22013
+
+  environment:
+    HOSTNAME: vpclub
+
+  extra_hosts:
+    vpclub: 192.168.1.31
+
+common-config-consumer:
+  image: java:8
+  working_dir: /app
+  volumes:
+    - ./common-config-consumer:/app
+
+  command: java -jar /app/vp-common-config-consumer-1.0.0.jar -XX:PermSize=30m -Xmx68m --spring.profiles.active=test
+
+  ports:
+    - 9870:9870
+    - 21600:21600
+    - 22073:22073
+
+  environment:
+    HOSTNAME: vpclub
+
+  extra_hosts:
+    vpclub: 192.168.1.31
+
+finance-consumer:
+  image: java:8
+  working_dir: /app
+  volumes:
+    - ./finance-consumer:/app
+
+  command: java -jar /app/vp-finance-consumer-1.0.0.jar -XX:PermSize=30m -Xmx68m --spring.profiles.active=test
+
+  ports:
+    - 9250:9250
+    - 21000:21000
+    - 22003:22003
+
+  environment:
+    HOSTNAME: vpclub
+
+  extra_hosts:
+    vpclub: 192.168.1.31
+
+payment-config-consumer:
+  image: java:8
+  working_dir: /app
+  volumes:
+    - ./payment-config-consumer:/app
+
+  command: java -jar /app/vp-payment-config-consumer-1.0.0.jar -XX:PermSize=30m -Xmx68m --spring.profiles.active=test
+
+  ports:
+    - 9370:9370
+    - 21120:21120
+    - 22093:22093
+
+  environment:
+    HOSTNAME: vpclub
+
+  extra_hosts:
+    vpclub: 192.168.1.31
+
+payment-consumer:
+  image: java:8
+  working_dir: /app
+  volumes:
+    - ./payment-consumer:/app
+
+  command: java -jar /app/vp-payment-consumer-1.0.0.jar -XX:PermSize=30m -Xmx68m --spring.profiles.active=test
+
+  ports:
+    - 9310:9310
+    - 21060:21060
+    - 23333:23333
+
+  environment:
+    HOSTNAME: vpclub
+
+  extra_hosts:
+    vpclub: 192.168.1.31
+
+authority-manager-consumer:
+  image: java:8
+  working_dir: /app
+  volumes:
+    - ./authority-manager-consumer:/app
+
+  command: java -jar /app/vp-authority-manager-consumer-1.0.0.jar -XX:PermSize=30m -Xmx68m --spring.profiles.active=test
+
+  ports:
+    - 9190:9190
+    - 20960:20960
+    - 22028:22028
+  environment:
+    HOSTNAME: vpclub
+
+  extra_hosts:
+    vpclub: 192.168.1.31
+
+
+user-consumer:
+  image: java:8
+  working_dir: /app
+  volumes:
+    - ./user-consumer:/app
+
+  command: java -jar /app/vp-user-consumer-1.0.0.jar -XX:PermSize=30m -Xmx68m --spring.profiles.active=test
+
+  ports:
+    - 9130:9130
+    - 20900:20900
+    - 22035:22035
+
+  environment:
+    HOSTNAME: vpclub
+
+  extra_hosts:
+    vpclub: 192.168.1.31
+
+coupon-product-consumer:
+  image: java:8
+  working_dir: /app
+  volumes:
+    - ./coupon-product-consumer:/app
+
+  command: java -jar /app/vp-coupon-product-consumer-1.0.0.jar -XX:PermSize=30m -Xmx68m --spring.profiles.active=test
+
+  ports:
+    - 9490:9490
+    - 21240:21240
+    - 24443:24443
+
+  environment:
+    HOSTNAME: vpclub
+
+  extra_hosts:
+    vpclub: 192.168.1.31
+
+coupon-order-consumer:
+  image: java:8
+  working_dir: /app
+  volumes:
+    - ./coupon-order-consumer:/app
+
+  command: java -jar /app/vp-coupon-order-consumer-1.0.0.jar -XX:PermSize=30m -Xmx68m --spring.profiles.active=test
+
+  ports:
+    - 9550:9550
+    - 21300:21300
+    - 22053:22053
+
+  environment:
+    HOSTNAME: vpclub
+
+  extra_hosts:
+    vpclub: 192.168.1.31
+
+coupon-report-consumer:
+  image: java:8
+  working_dir: /app
+  volumes:
+    - ./coupon-report-consumer:/app
+
+  command: java -jar /app/vp-coupon-report-consumer-1.0.0.jar -XX:PermSize=30m -Xmx68m --spring.profiles.active=test
+
+  ports:
+    - 9610:9610
+    - 21360:21360
+    - 22253:22253
+
+  environment:
+    HOSTNAME: vpclub
+
+  extra_hosts:
+    vpclub: 192.168.1.31
+
+coupon-messaging-consumer:
+  image: java:8
+  working_dir: /app
+  volumes:
+    - ./coupon-messaging-consumer:/app
+
+  command: java -jar /app/vp-coupon-messaging-consumer-1.0.0.jar -XX:PermSize=30m -Xmx68m --spring.profiles.active=test
+
+  ports:
+    - 9670:9670
+    - 21420:21420
+    - 22126:22126
+
+  environment:
+    HOSTNAME: vpclub
+
+  extra_hosts:
+    vpclub: 192.168.1.31

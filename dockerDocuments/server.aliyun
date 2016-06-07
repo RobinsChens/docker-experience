@@ -1,0 +1,18 @@
+supay.pay.vpclub.cn
+服务器1 120.76.97.184(外) 10.46.125.194(内) 22089 root sUper@9986^p@y     storage
+服务器2 120.76.97.160(外) 10.46.125.195(内) 22089 root sUper@9987^p@y     public
+服务器3 120.76.97.105(外) 10.46.125.192(内) 22089 root sUper@8899^p@y         web
+服务器4 120.76.97.47(外) 10.46.125.189(内) 22089 root  sUper@8999^p@y           services
+
+全平台缓存服务器 120.76.84.75  22089  root  c@che5607$hell
+
+
+
+
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCbHEh8qYUeYLBQaErgXjXralhNr8jt4fDfNqsfEj2mAPVCu/rCCsrxD3S5ErxgLAKioEDISCaSSYvXws5rhbDQ0JvQoK2imQXN8x2ca9BAb62CX4OZuHSAAy3zmnfb8CUBuCwd6EzY+6hBwJvSxwLQwtFn1V2pvjvPzFhcOphgqedKWykXeUEPWu/anPEQLoDPZGVHpEy6dlPevp9sf2i4uZ1NdDzFW72Epf+t45YHj3GH/JBQRnkBv6cBRAwBQcvKljajsGataKQ4Nn7K01zjjav2x+x70BDf/d67AxBjrel8RelHR9mL8VEIOEQfdyEWJhDpBlYGnlofoIWQkul5cFJibtH5puCuY9eG6HQ/wPCncrsias51XCcRw7NRfbYbgJ38KqwkvgtAFkN4iVatXGbnesLy5PSoGs4YlPxmGaAFFEsOXNXmgE8GH4T3oZizdO7aAo2Yu5e+zwZr+EMkm37QvpivK2y77MUg4Or9dnWK6UYIBI+4YDF3zTT0MZbEe5ImbMmTJYk30h7RJX24SChlEE2QTPdFaqPlJkzff02nPRYjL/AwK6H0o5RidP0NPlYdHQkmfiAfbzGmnx3clx9GeOJcW5DICgCAJ+AeVDSTlt1Jve6U0YTT6htC9UalpDeVicPsvtl1TGOjLHn+HaR/ZzXEUz0JuejAHVfV2Q== chen.wei@vpclub.cn
+
+#make
+ssh-keygen
+
+#execute update yml 
+./deploy.sh eth0 prod

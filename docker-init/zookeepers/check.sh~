@@ -1,0 +1,7 @@
+#!/bin/bash
+echo "2181 status"
+echo stat | nc 172.16.5.30 2181
+echo "2182 status"
+echo stat | nc 172.16.5.30  2182
+echo "2183 status"
+echo stat | nc 172.16.5.30  2183

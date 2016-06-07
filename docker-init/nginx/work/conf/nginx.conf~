@@ -1,0 +1,320 @@
+worker_processes  1;
+#error_log logs/error.log;
+events {
+  worker_connections 1024;
+}
+http {
+  upstream user {
+    ip_hash;
+    server 10.46.125.192:9130;
+  }
+  upstream authorityManager {
+    ip_hash;
+    server 10.46.125.192:9190;
+  }
+  upstream finance {
+    ip_hash;
+    server 10.46.125.192:9250;
+  }
+
+  upstream payment {
+    ip_hash;
+    server 10.46.125.192:9310;
+  }
+  upstream paymentConfig {
+    ip_hash;
+    server 10.46.125.192:9370;
+  }
+  upstream sms {
+    ip_hash;
+    server 10.46.125.192:9430;
+  }
+  upstream commonConfig {
+    ip_hash;
+    server 10.46.125.192:9870;
+  }
+  upstream couponProduct {
+    ip_hash;
+    server 10.46.125.192:9490;
+  }
+ 
+  upstream couponOrder {
+    ip_hash;
+    server 10.46.125.192:9550;
+  }
+  upstream upload {
+    ip_hash;
+    server 10.46.125.192:9980;
+  }
+  upstream couponReport {
+    ip_hash;
+    server 10.46.125.192:9610;
+  }
+  upstream couponMessaging {
+    ip_hash;
+    server 10.46.125.192:9670;
+  }
+  upstream couponReviews {
+    ip_hash;
+    server 10.46.125.192:9960;
+  }
+  # sample output for the following /upstream interface:
+  # upstream foo.com:
+  #     addr = 127.0.0.1:80, weight = 4, fail_timeout = 53, max_fails = 100
+  #     addr = 106.184.1.99:81, weight = 1, fail_timeout = 10, max_fails = 1
+  # upstream bar:
+  server {
+    listen 80;
+    server_name 10.46.125.192;
+    add_header 'Access-Control-Allow-Methods' 'GET,POST,DELETE,OPTIONS';
+    add_header 'Access-Control-Allow-Credentials' 'true';
+    add_header 'Access-Control-Allow-Origin' "$http_origin";
+    add_header 'Access-Control-Allow-Headers' 'WD-Since,WD-Start,WD-Direction,WD-Length,WD-Ids,Content-Type,WD-Client-Id';
+    add_header 'Access-Control-Expose-Headers' 'WD-Total-Length,WD-Phone-Modal,WD-Client-Id,WD-Udid,WD-Need-More';
+    #SSL
+    #ssl on;
+    #ssl_certificate /etc/nginx/conf.d/domain.crt;
+    #ssl_certificate_key /etc/nginx/conf.d/domain.key;
+
+    # disable any limits to avoid HTTP 413 for large image uploads
+    client_max_body_size 0;
+
+    # required to avoid HTTP 411: see Issue #1486 (https://github.com/docker/docker/issues/1486)
+    chunked_transfer_encoding on;
+
+    location /user {
+      # Do not allow connections from docker 1.5 and earlier
+      # docker pre-1.6.0 did not properly set the user agent on ping, catch "Go *" user agents
+
+      # To add basic authentication to v2 use auth_basic setting plus add_header
+      # auth_basic "registry.10.46.125.192";
+
+      proxy_pass                          http://user;
+      proxy_set_header  Host              $http_host;   # required for docker client's sake
+      proxy_set_header  X-Real-IP         $remote_addr; # pass on real client's IP
+      proxy_set_header  X-Forwarded-For   $proxy_add_x_forwarded_for;
+      proxy_set_header  X-Forwarded-Proto $scheme;
+      proxy_read_timeout                  900;
+    }
+
+    location /authorityManager {
+      # Do not allow connections from docker 1.5 and earlier
+      # docker pre-1.6.0 did not properly set the user agent on ping, catch "Go *" user agents
+      add_header 'Access-Control-Allow-Methods' 'GET,POST,DELETE,OPTIONS';
+      add_header 'Access-Control-Allow-Credentials' 'true';
+      add_header 'Access-Control-Allow-Origin' "$http_origin";
+      add_header 'Access-Control-Allow-Headers' 'WD-Since,WD-Start,WD-Direction,WD-Length,WD-Ids,Content-Type,WD-Client-Id';
+      add_header 'Access-Control-Expose-Headers' 'WD-Total-Length,WD-Phone-Modal,WD-Client-Id,WD-Udid,WD-Need-More';
+      proxy_cache off;
+
+      # To add basic authentication to v2 use auth_basic setting plus add_header
+      # auth_basic "registry.10.46.125.192";
+
+      proxy_pass                          http://authorityManager;
+        proxy_set_header  Host              $http_host;   # required for docker client's sake
+      proxy_set_header  X-Real-IP         $remote_addr; # pass on real client's IP
+      proxy_set_header  X-Forwarded-For   $proxy_add_x_forwarded_for;
+      proxy_set_header  X-Forwarded-Proto $scheme;
+      proxy_read_timeout                  900;
+    }
+    location /finance {
+      # Do not allow connections from docker 1.5 and earlier
+      # docker pre-1.6.0 did not properly set the user agent on ping, catch "Go *" user agents
+      add_header 'Access-Control-Allow-Methods' 'GET,POST,DELETE,OPTIONS';
+      add_header 'Access-Control-Allow-Credentials' 'true';
+      add_header 'Access-Control-Allow-Origin' "$http_origin";
+      add_header 'Access-Control-Allow-Headers' 'WD-Since,WD-Start,WD-Direction,WD-Length,WD-Ids,Content-Type,WD-Client-Id';
+      add_header 'Access-Control-Expose-Headers' 'WD-Total-Length,WD-Phone-Modal,WD-Client-Id,WD-Udid,WD-Need-More';
+      proxy_cache off;
+
+      # To add basic authentication to v2 use auth_basic setting plus add_header
+      # auth_basic "registry.10.46.125.192";
+
+      proxy_pass                          http://finance;
+        proxy_set_header  Host              $http_host;   # required for docker client's sake
+      proxy_set_header  X-Real-IP         $remote_addr; # pass on real client's IP
+      proxy_set_header  X-Forwarded-For   $proxy_add_x_forwarded_for;
+      proxy_set_header  X-Forwarded-Proto $scheme;
+      proxy_read_timeout                  900;
+    }
+    location /sms {
+      # Do not allow connections from docker 1.5 and earlier
+      # docker pre-1.6.0 did not properly set the user agent on ping, catch "Go *" user agents
+      add_header 'Access-Control-Allow-Methods' 'GET,POST,DELETE,OPTIONS';
+      add_header 'Access-Control-Allow-Credentials' 'true';
+      add_header 'Access-Control-Allow-Origin' "$http_origin";
+      add_header 'Access-Control-Allow-Headers' 'WD-Since,WD-Start,WD-Direction,WD-Length,WD-Ids,Content-Type,WD-Client-Id';
+      add_header 'Access-Control-Expose-Headers' 'WD-Total-Length,WD-Phone-Modal,WD-Client-Id,WD-Udid,WD-Need-More';
+      proxy_cache off;
+
+      # To add basic authentication to v2 use auth_basic setting plus add_header
+      # auth_basic "registry.10.46.125.192";
+
+      proxy_pass                          http://sms;
+        proxy_set_header  Host              $http_host;   # required for docker client's sake
+      proxy_set_header  X-Real-IP         $remote_addr; # pass on real client's IP
+      proxy_set_header  X-Forwarded-For   $proxy_add_x_forwarded_for;
+      proxy_set_header  X-Forwarded-Proto $scheme;
+      proxy_read_timeout                  900;
+    }
+    location /commonConfig {
+      # Do not allow connections from docker 1.5 and earlier
+      # docker pre-1.6.0 did not properly set the user agent on ping, catch "Go *" user agents
+      add_header 'Access-Control-Allow-Methods' 'GET,POST,DELETE,OPTIONS';
+      add_header 'Access-Control-Allow-Credentials' 'true';
+      add_header 'Access-Control-Allow-Origin' "$http_origin";
+      add_header 'Access-Control-Allow-Headers' 'WD-Since,WD-Start,WD-Direction,WD-Length,WD-Ids,Content-Type,WD-Client-Id';
+      add_header 'Access-Control-Expose-Headers' 'WD-Total-Length,WD-Phone-Modal,WD-Client-Id,WD-Udid,WD-Need-More';
+      proxy_cache off;
+
+      # To add basic authentication to v2 use auth_basic setting plus add_header
+      # auth_basic "registry.10.46.125.192";
+
+      proxy_pass                          http://commonconfig;
+        proxy_set_header  Host              $http_host;   # required for docker client's sake
+      proxy_set_header  X-Real-IP         $remote_addr; # pass on real client's IP
+      proxy_set_header  X-Forwarded-For   $proxy_add_x_forwarded_for;
+      proxy_set_header  X-Forwarded-Proto $scheme;
+      proxy_read_timeout                  900;
+    }
+    location /couponProduct {
+      # Do not allow connections from docker 1.5 and earlier
+      # docker pre-1.6.0 did not properly set the user agent on ping, catch "Go *" user agents
+      add_header 'Access-Control-Allow-Methods' 'GET,POST,DELETE,OPTIONS';
+      add_header 'Access-Control-Allow-Credentials' 'true';
+      add_header 'Access-Control-Allow-Origin' "$http_origin";
+      add_header 'Access-Control-Allow-Headers' 'WD-Since,WD-Start,WD-Direction,WD-Length,WD-Ids,Content-Type,WD-Client-Id';
+      add_header 'Access-Control-Expose-Headers' 'WD-Total-Length,WD-Phone-Modal,WD-Client-Id,WD-Udid,WD-Need-More';
+      proxy_cache off;
+
+      # To add basic authentication to v2 use auth_basic setting plus add_header
+      # auth_basic "registry.10.46.125.192";
+
+      proxy_pass                          http://couponproduct;
+        proxy_set_header  Host              $http_host;   # required for docker client's sake
+      proxy_set_header  X-Real-IP         $remote_addr; # pass on real client's IP
+      proxy_set_header  X-Forwarded-For   $proxy_add_x_forwarded_for;
+      proxy_set_header  X-Forwarded-Proto $scheme;
+      proxy_read_timeout                  900;
+    }
+    location /couponOrder {
+      # Do not allow connections from docker 1.5 and earlier
+      # docker pre-1.6.0 did not properly set the user agent on ping, catch "Go *" user agents
+      add_header 'Access-Control-Allow-Methods' 'GET,POST,DELETE,OPTIONS';
+      add_header 'Access-Control-Allow-Credentials' 'true';
+      add_header 'Access-Control-Allow-Origin' "$http_origin";
+      add_header 'Access-Control-Allow-Headers' 'WD-Since,WD-Start,WD-Direction,WD-Length,WD-Ids,Content-Type,WD-Client-Id';
+      add_header 'Access-Control-Expose-Headers' 'WD-Total-Length,WD-Phone-Modal,WD-Client-Id,WD-Udid,WD-Need-More';
+      proxy_cache off;
+
+      # To add basic authentication to v2 use auth_basic setting plus add_header
+      # auth_basic "registry.10.46.125.192";
+
+      proxy_pass                          http://couponorder;
+        proxy_set_header  Host              $http_host;   # required for docker client's sake
+      proxy_set_header  X-Real-IP         $remote_addr; # pass on real client's IP
+      proxy_set_header  X-Forwarded-For   $proxy_add_x_forwarded_for;
+      proxy_set_header  X-Forwarded-Proto $scheme;
+      proxy_read_timeout                  900;
+    }
+
+    location /payment {
+      # Do not allow connections from docker 1.5 and earlier
+      # docker pre-1.6.0 did not properly set the user agent on ping, catch "Go *" user agents
+      add_header 'Access-Control-Allow-Methods' 'GET,POST,DELETE,OPTIONS';
+      add_header 'Access-Control-Allow-Credentials' 'true';
+      add_header 'Access-Control-Allow-Origin' "$http_origin";
+      add_header 'Access-Control-Allow-Headers' 'WD-Since,WD-Start,WD-Direction,WD-Length,WD-Ids,Content-Type,WD-Client-Id';
+      add_header 'Access-Control-Expose-Headers' 'WD-Total-Length,WD-Phone-Modal,WD-Client-Id,WD-Udid,WD-Need-More';
+      proxy_cache off;
+
+      # To add basic authentication to v2 use auth_basic setting plus add_header
+      # auth_basic "registry.10.46.125.192";
+
+      proxy_pass                          http://payment;
+        proxy_set_header  Host              $http_host;   # required for docker client's sake
+      proxy_set_header  X-Real-IP         $remote_addr; # pass on real client's IP
+      proxy_set_header  X-Forwarded-For   $proxy_add_x_forwarded_for;
+      proxy_set_header  X-Forwarded-Proto $scheme;
+      proxy_read_timeout                  900;
+    }
+
+
+    location /paymentConfig {
+      # Do not allow connections from docker 1.5 and earlier
+      # docker pre-1.6.0 did not properly set the user agent on ping, catch "Go *" user agents
+      add_header 'Access-Control-Allow-Methods' 'GET,POST,DELETE,OPTIONS';
+      add_header 'Access-Control-Allow-Credentials' 'true';
+      add_header 'Access-Control-Allow-Origin' "$http_origin";
+      add_header 'Access-Control-Allow-Headers' 'WD-Since,WD-Start,WD-Direction,WD-Length,WD-Ids,Content-Type,WD-Client-Id';
+      add_header 'Access-Control-Expose-Headers' 'WD-Total-Length,WD-Phone-Modal,WD-Client-Id,WD-Udid,WD-Need-More';
+      proxy_cache off;
+
+      # To add basic authentication to v2 use auth_basic setting plus add_header
+      # auth_basic "registry.10.46.125.192";
+
+      proxy_pass                          http://paymentConfig;
+      proxy_set_header  Host              $http_host;   # required for docker client's sake
+      proxy_set_header  X-Real-IP         $remote_addr; # pass on real client's IP
+      proxy_set_header  X-Forwarded-For   $proxy_add_x_forwarded_for;
+      proxy_set_header  X-Forwarded-Proto $scheme;
+      proxy_read_timeout                  900;
+    }
+   location /upload {
+      # Do not allow connections from docker 1.5 and earlier
+      # docker pre-1.6.0 did not properly set the user agent on ping, catch "Go *" user agents
+
+      # To add basic authentication to v2 use auth_basic setting plus add_header
+      # auth_basic "registry.10.46.125.192";
+
+      proxy_pass                          http://upload;
+      proxy_set_header  Host              $http_host;   # required for docker client's sake
+      proxy_set_header  X-Real-IP         $remote_addr; # pass on real client's IP
+      proxy_set_header  X-Forwarded-For   $proxy_add_x_forwarded_for;
+      proxy_set_header  X-Forwarded-Proto $scheme;
+      proxy_read_timeout                  900;
+    }
+    location /couponReport {
+      # Do not allow connections from docker 1.5 and earlier
+      # docker pre-1.6.0 did not properly set the user agent on ping, catch "Go *" user agents
+
+      # To add basic authentication to v2 use auth_basic setting plus add_header
+      # auth_basic "registry.10.46.125.192";
+
+      proxy_pass                          http://couponReport;
+      proxy_set_header  Host              $http_host;   # required for docker client's sake
+      proxy_set_header  X-Real-IP         $remote_addr; # pass on real client's IP
+      proxy_set_header  X-Forwarded-For   $proxy_add_x_forwarded_for;
+      proxy_set_header  X-Forwarded-Proto $scheme;
+      proxy_read_timeout                  900;
+    }
+    location /couponMessaging {
+      # Do not allow connections from docker 1.5 and earlier
+      # docker pre-1.6.0 did not properly set the user agent on ping, catch "Go *" user agents
+
+      # To add basic authentication to v2 use auth_basic setting plus add_header
+      # auth_basic "registry.10.46.125.192";
+
+      proxy_pass                          http://couponMessaging;
+      proxy_set_header  Host              $http_host;   # required for docker client's sake
+      proxy_set_header  X-Real-IP         $remote_addr; # pass on real client's IP
+      proxy_set_header  X-Forwarded-For   $proxy_add_x_forwarded_for;
+      proxy_set_header  X-Forwarded-Proto $scheme;
+      proxy_read_timeout                  900;
+    }
+    location /couponMessaging {
+      # Do not allow connections from docker 1.5 and earlier
+      # docker pre-1.6.0 did not properly set the user agent on ping, catch "Go *" user agents
+
+      # To add basic authentication to v2 use auth_basic setting plus add_header
+      # auth_basic "registry.10.46.125.192";
+
+      proxy_pass                          http://couponMessaging;
+      proxy_set_header  Host              $http_host;   # required for docker client's sake
+      proxy_set_header  X-Real-IP         $remote_addr; # pass on real client's IP
+      proxy_set_header  X-Forwarded-For   $proxy_add_x_forwarded_for;
+      proxy_set_header  X-Forwarded-Proto $scheme;
+      proxy_read_timeout                  900;
+    }
+  }
+}
