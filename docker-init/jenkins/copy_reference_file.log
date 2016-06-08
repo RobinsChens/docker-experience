@@ -1,0 +1,7 @@
+--- Copying files at Tue Jun  7 09:07:40 UTC 2016
+/usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy
+ /usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy -> init.groovy.d/tcp-slave-agent-port.groovy
+copy init.groovy.d/tcp-slave-agent-port.groovy to JENKINS_HOME
+--- Copying files at Tue Jun  7 13:24:58 UTC 2016
+/usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy
+ /usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy -> init.groovy.d/tcp-slave-agent-port.groovy
