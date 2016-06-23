@@ -55,6 +55,7 @@ mkdir -p 001 002 003 004 005 006
     pushd 006
         addNewApp vp-coupon-order-provider "9520 21110 31110" "" 96m
         addNewApp vp-order-provider "9525 21115 31115" "" 32m
+        addNewApp vp-traffic-monetisation-provider "10010 23010 33010" "" 32m
     popd
 
 popd
@@ -83,6 +84,7 @@ mkdir -p 001 002 003 004
         addNewApp vp-coupon-customer-reviews-consumer "9960 21240 31240" "" 64m
         addNewApp vp-order-consumer "9555 21225 31225" "" 64m
         addNewApp vp-monitor-consumer "9990 22210 32210" "" 64m
+        addNewApp vp-traffic-monetisation-consumer "10020 23020 33020" "" 64m
     popd
 popd
 
