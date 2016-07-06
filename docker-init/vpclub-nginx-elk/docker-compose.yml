@@ -1,0 +1,6 @@
+nginx:
+  image: vpclub/nginx
+  ports:
+    - 80:80
+  volumes:
+    - ./work/conf:/etc/nginx:ro
