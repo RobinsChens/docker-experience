@@ -1,0 +1,80 @@
+#redis:
+#  image: vpclub/redis:latest
+#  container_name: redis
+#  ports:
+#    - 6379:6379
+#  environment:
+#    REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /data
+#  volumes:
+#    - /data/redis:/data
+#  command: redis-server --appendonly yes
+mysql:
+  image: "vpclub/mysql:latest"
+  container_name: mysql
+  net: host
+  ports:
+    - 3306:3306
+  environment:
+    MYSQL_ROOT_PASSWORD: "@vpclubdev"
+  volumes:
+    - /docker-init/mysqlConf:/etc/mysql/conf.d
+    - /data/mysql:/var/lib/mysql
+  
+mongodb:
+  image: "vpclub/mongodb:latest"
+  container_name: mongodb 
+  ports:
+    - 27017:27017
+    - 28017:28017
+  volumes:
+    - /data/mongodb:/data/db
+#redis-cluster
+redis-master:
+  image: "vpclub/redis:latest"
+  container_name: redis-master
+  volumes:
+    - ./data/redis/master:/data
+  ports:
+    - 6379:6379
+
+redis-slave1:
+  image: "vpclub/redis:latest"
+  container_name: redis-slave1
+  volumes:
+    - ./redis-conf/6380:/usr/local/etc/redis/
+    - ./data/redis/slave1:/data
+  command: redis-server /usr/local/etc/redis/redis.conf --appendonly yes
+  ports:
+    - 6380:6379
+  links:
+    - redis-master
+redis-slave2:
+  image: "vpclub/redis:latest"
+  container_name: redis-slave2
+  volumes:
+    - ./redis-conf/6381:/usr/local/etc/redis/
+    - ./data/redis/slave2:/data
+  command: redis-server /usr/local/etc/redis/redis.conf --appendonly yes
+  ports:
+    - 6381:6379
+  links:
+    - redis-master
+redis-slave3:
+  image: "vpclub/redis:latest"
+  container_name: redis-slave3
+  volumes:
+    - ./redis-conf/6382:/usr/local/etc/redis/
+    - ./data/redis/slave3:/data
+  command: redis-server /usr/local/etc/redis/redis.conf --appendonly yes
+  ports:
+    - 6382:6379
+  links:
+    - redis-master
+#monitor
+monitor:
+  image: vpclub/monitor:latest
+  container_name: monitor
+  ports:
+    - 8090:8080
+  volumes:
+   - ./conf:/dubbo/monitor-simple/conf
